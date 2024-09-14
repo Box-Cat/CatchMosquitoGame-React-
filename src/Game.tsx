@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Button from "./components/Button";
 import Score from "./components/Score";
 import imgMosquito0 from "./images/mosquito0.png";
@@ -42,10 +42,11 @@ function Game() {
 
   //모기 이미지 입력
   mosquitoImgArrTemp = [imgMosquito0, imgMosquito1, imgMosquito2, imgMosquito3];
-  for (let i = 0; i < imgNumber; i++) {
-    mosquitoImgArr[i] = new Image();
-    mosquitoImgArr[i].src = mosquitoImgArrTemp[i]
-  }
+  mosquitoImgArrTemp.forEach(src => {
+    const img = new Image();
+    img.src = src;
+    mosquitoImgArr.push(img);
+  });
 
 
   const resetGame = () => {
@@ -59,7 +60,7 @@ function Game() {
     startTime = new Date(); // 시작 시간 초기화
   };
 
-  const onStart = () => {
+  const onStart = useCallback(() => {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -89,7 +90,7 @@ function Game() {
         if (dot.size < 1) {
           clicker.splice(index, 1);
         }
-      })
+      });
 
       mosquito.MosquitoArr.forEach((bub, index) => {
 
@@ -182,13 +183,12 @@ function Game() {
 
     function drawElapsedTime() {
       if (elapsed < 1) return
-      elapsed = useElapsedTimeRef.current - Math.floor((new Date().getTime() - startTime.getTime()) / 1000); //체크
-      return elapsed;
+      elapsed = useElapsedTimeRef.current - Math.floor((new Date().getTime() - startTime.getTime()) / 1000);
     }
 
     //함수 호출
     draw();
-  }
+  }, [start, elapsed]);
 
   function toggleStart() {
     if (start === false) setStart(true);
@@ -208,9 +208,9 @@ function Game() {
           height={height}
           className="canvas"
         />
-        {start === true ? <Button onClick={toggleStart} name="Game Start" width={width} backgroundColor={"black"}/> : null}
+        {start === true ? <Button onClick={toggleStart} name="Game Start" width={width} backgroundcolor={"black"}/> : null}
         {resultScore === true && <Score score={useResultRef.current} />}
-        {gameover && <Button onClick={resetGame} name="Restart" width={width} backgroundColor={"gray"} />}
+        {gameover && <Button onClick={resetGame} name="Restart" width={width} backgroundcolor={"gray"} />}
       </div>
     </div>
   );

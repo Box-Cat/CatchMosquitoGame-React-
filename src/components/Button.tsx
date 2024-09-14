@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
 
 const Button = (props: any) => {
@@ -6,16 +6,16 @@ const Button = (props: any) => {
     <StyledButton
       onClick={props.onClick}
       width={props.width}
-      backgroundColor ={props.backgroundColor}
+      $backgroundcolor={props.backgroundcolor} // Transient prop으로 변경
     > 
       {props.name}
     </StyledButton>
   );
 }
 
-const StyledButton = styled.button<{ width: string; backgroundColor: string;}>`
+const StyledButton = styled.button<{ width: string; $backgroundcolor: string; }>` // Transient prop으로 변경
   color: white;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => props.$backgroundcolor}; // Transient prop으로 변경
   border: 2px solid white;
   border-radius: 25px;
   padding: 5px;
